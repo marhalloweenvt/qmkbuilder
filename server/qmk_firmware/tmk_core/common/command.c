@@ -181,7 +181,11 @@ static void print_version(void)
     print("VID: " STR(VENDOR_ID) "(" STR(MANUFACTURER) ") "
           "PID: " STR(PRODUCT_ID) "(" STR(PRODUCT) ") "
           "VER: " STR(DEVICE_VER) "\n");
+#ifdef SKIP_VERSION
+    print("BUILD:  (" __DATE__ ")\n");
+#else
     print("BUILD: " STR(QMK_VERSION) " (" __TIME__ " " __DATE__ ")\n");
+#endif
 
     /* build options */
     print("OPTIONS:"
@@ -235,8 +239,11 @@ static void print_status(void)
     print("\n\t- Status -\n");
 
     print_val_hex8(host_keyboard_leds());
+#ifndef PROTOCOL_VUSB
+    // these aren't set on the V-USB protocol, so we just ignore them for now
     print_val_hex8(keyboard_protocol);
     print_val_hex8(keyboard_idle);
+#endif
 #ifdef NKRO_ENABLE
     print_val_hex8(keymap_config.nkro);
 #endif
